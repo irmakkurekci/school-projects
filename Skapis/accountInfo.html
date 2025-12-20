@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account Information - Skapis</title>
+  <link rel="stylesheet" href="styles2.css">
+  <style>
+    .account-container {
+      padding: 40px;
+      background-color: #fff;
+      max-width: 600px;
+      margin: 30px auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .account-container h2 {
+      color: #fc6601;
+      margin-bottom: 20px;
+    }
+
+    .account-container label {
+      display: block;
+      margin-top: 15px;
+      color: #ff1493;
+      font-weight: bold;
+    }
+
+    .account-container input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 5px;
+    }
+
+    .photo-preview {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ddd;
+      display: block;
+      margin-top: 10px;
+    }
+
+    .button-group {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .btn-save {
+      background-color: #28a745;
+    }
+
+    .btn-edit {
+      background-color: #ffc107;
+      color: #000;
+    }
+
+/* Dropdown menu */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      border-radius: 5px;
+      z-index: 10;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #ff1493;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #ffe0ec;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    /* Top layout match */
+    .brand-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
+
+    .company-name {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .company-name a {
+      text-decoration: none;
+      color: #ff1493;
+    }
+
+    input[type="search"] {
+      width: 200px;
+      height: 35px;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<div class="header-section">
+	<header style="display: flex; align-items: center; justify-content: space-between; padding: 1px 2px; border-bottom: 2px solid #FE7D6A60;">
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		  <img src="logo.png" alt="Skapis Logo" class="logo" style="width: 90px; height: 70px; object-fit: contain;">
+		  <h1 class="company-name" style="margin: 0px 0 0 0; font-size: 35px;">
+			<a href="index.html" style="text-decoration: none; color: #FF1493; ">Skapis</a>
+		  </h1>
+		</div>
+		<input type="search" placeholder="Search...">
+		
+	  <button onclick="location.href='newpage.html'" style="background: none; border: none; cursor: pointer;">
+		<div class="dropdown">
+			<img src="icon.png" alt="User Icon" style="width: 40px; height: 40px;">
+			<div class="dropdown-content">
+				<a href="accountInfo.html">Account Info</a>
+				<a href="addressInfo.html">Address Info</a>
+				<a href="billingInfo.html">Billing Info</a>
+				<a href="orders.html">Your Orders</a>
+				<a href="helpCenter.html">Help Center</a>
+				<a href="createShop.html">Create Shop</a>
+			</div>
+		</div>
+	  </button>
+	</header>
+</div>
+
+<!-- Account Form Section -->
+<div class="account-container">
+  <h2>Account Information</h2>
+
+  <label for="photo">Profile Photo:</label>
+  <input type="file" id="photo" accept="image/*">
+  <img id="photoPreview" class="photo-preview" src="#" alt="Profile Photo" style="display: none;">
+
+  <label for="accountName">Account Name:</label>
+  <input type="text" id="accountName" value="irmakk13">
+  
+  <label for="name">Name:</label>
+  <input type="text" id="name" value="Jane">
+
+  <label for="surname">Surname:</label>
+  <input type="text" id="surname" value="Doe">
+  
+  <label for="age">Age:</label>
+  <input type="number" id="age" value="28">
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" value="jane.doe@example.com">
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" value="password123">
+
+  <label for="confirmPassword">Confirm Password:</label>
+  <input type="password" id="confirmPassword" value="password123">
+
+  <div class="button-group">
+    <button type="button" class="btn btn-save" onclick="saveAccount()">Save</button>
+    <button type="button" class="btn btn-edit" onclick="enableEdit()">Edit</button>
+  </div>
+</div>
+
+<script>
+  const photoInput = document.getElementById('photo');
+  const photoPreview = document.getElementById('photoPreview');
+
+  photoInput.addEventListener('change', function () {
+    const file = photoInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        photoPreview.src = e.target.result;
+        photoPreview.style.display = 'block';
+        localStorage.setItem('photo', e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  function saveAccount() {
+    localStorage.setItem('name', document.getElementById('name').value);
+    localStorage.setItem('surname', document.getElementById('surname').value);
+	localStorage.setItem('accountName', document.getElementById('accountName').value);
+    localStorage.setItem('age', document.getElementById('age').value);
+    localStorage.setItem('email', document.getElementById('email').value);
+    localStorage.setItem('password', document.getElementById('password').value);
+    localStorage.setItem('confirmPassword', document.getElementById('confirmPassword').value);
+    alert('Account information saved!');
+    disableForm();
+  }
+
+  function enableEdit() {
+    document.querySelectorAll('.account-container input').forEach(input => input.disabled = false);
+  }
+
+  function disableForm() {
+    document.querySelectorAll('.account-container input').forEach(input => input.disabled = true);
+  }
+
+  window.onload = function () {
+    document.getElementById('name').value = localStorage.getItem('name') || 'Jane';
+    document.getElementById('surname').value = localStorage.getItem('surname') || 'Doe';
+	document.getElementById('accountName').value = localStorage.getItem('accountName') || 'irmakk13';
+    document.getElementById('age').value = localStorage.getItem('age') || '28';
+    document.getElementById('email').value = localStorage.getItem('email') || 'jane.doe@example.com';
+    document.getElementById('password').value = localStorage.getItem('password') || 'password123';
+    document.getElementById('confirmPassword').value = localStorage.getItem('confirmPassword') || 'password123';
+
+    const savedPhoto = localStorage.getItem('photo');
+    if (savedPhoto) {
+      photoPreview.src = savedPhoto;
+      photoPreview.style.display = 'block';
+    }
+
+    disableForm();
+  }
+</script>
+
+</body>
+</html>

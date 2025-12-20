@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Messages - Skapis</title>
+  <link rel="stylesheet" href="styles2.css">
+  <style>
+    .messages-container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 40px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .messages-container h2 {
+      color: #fc6601;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .message-card {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      background-color: #fff5f9;
+    }
+
+    .message-card p {
+      margin: 5px 0;
+    }
+
+    .message-card strong {
+      color: #ff1493;
+    }
+
+    .reply-area textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+
+    .reply-area button {
+      margin-top: 8px;
+      padding: 8px 14px;
+      background-color: #28a745;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Header styles */
+    .brand-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
+
+    .company-name {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .company-name a {
+      text-decoration: none;
+      color: #ff1493;
+    }
+
+    input[type="search"] {
+      width: 200px;
+      height: 35px;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      border-radius: 5px;
+      z-index: 10;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #ff1493;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #ffe0ec;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<div class="header-section">
+	<header style="display: flex; align-items: center; justify-content: space-between; padding: 1px 2px; border-bottom: 2px solid #FE7D6A60;">
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		  <img src="logo.png" alt="Skapis Logo" class="logo" style="width: 90px; height: 70px; object-fit: contain;">
+		  <h1 class="company-name" style="margin: 0px 0 0 0; font-size: 35px;">
+			<a href="index.html" style="text-decoration: none; color: #FF1493; ">Skapis</a>
+		  </h1>
+		</div>
+		<input type="search" placeholder="Search...">
+		
+	  <button onclick="location.href='newpage.html'" style="background: none; border: none; cursor: pointer;">
+		<div class="dropdown">
+			<img src="icon.png" alt="User Icon" style="width: 40px; height: 40px;">
+			<div class="dropdown-content">
+				<a href="shopPreview.html">Add Product</a>
+				<a href="messages.html">Messages</a>
+				<a href="wallet.html">Wallet</a>
+				<a href="rating.html">Rating and Comments</a>
+
+			</div>
+		</div>
+	  </button>
+	</header>
+</div>
+<!-- Messages Section -->
+<div class="messages-container">
+  <h2>Messages About Your Products</h2>
+
+  <div class="message-card">
+    <p><strong>Product:</strong> Handmade Bracelet</p>
+    <p><strong>From:</strong> sandra98</p>
+    <p><strong>Message:</strong> Hi! Is this bracelet still available? Could you do €10?</p>
+    <div class="reply-area">
+      <textarea rows="2" placeholder="Write your reply..."></textarea>
+      <button onclick="alert('Reply sent!')">Send Reply</button>
+    </div>
+  </div>
+
+  <div class="message-card">
+    <p><strong>Product:</strong> Iron Maiden T-shirt</p>
+    <p><strong>From:</strong> rockfan77</p>
+    <p><strong>Message:</strong> Is the print faded or in good condition?</p>
+    <div class="reply-area">
+      <textarea rows="2" placeholder="Write your reply..."></textarea>
+      <button onclick="alert('Reply sent!')">Send Reply</button>
+    </div>
+  </div>
+
+  <div class="message-card">
+    <p><strong>Product:</strong> Used Bag - Medium</p>
+    <p><strong>From:</strong> elina_shop</p>
+    <p><strong>Message:</strong> Can you ship this to Liepāja?</p>
+    <div class="reply-area">
+      <textarea rows="2" placeholder="Write your reply..."></textarea>
+      <button onclick="alert('Reply sent!')">Send Reply</button>
+    </div>
+  </div>
+</div>
+
+
+
+</body>
+</html>

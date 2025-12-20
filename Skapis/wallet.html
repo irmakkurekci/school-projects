@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wallet - Skapis</title>
+  <link rel="stylesheet" href="styles2.css">
+  <style>
+    .wallet-container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 40px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .wallet-container h2 {
+      color: #fc6601;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .wallet-section {
+      margin-bottom: 30px;
+    }
+
+    .wallet-section p {
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #ff1493;
+    }
+
+    .virtual-card {
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 10px;
+      background: #fff5f9;
+    }
+
+    .virtual-card h3 {
+      color: #ff1493;
+    }
+
+    .virtual-card input {
+      padding: 8px;
+      width: 100%;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .virtual-card button {
+      background-color: #28a745;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #fc660120;
+    }
+
+    .brand-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
+
+    .company-name {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .company-name a {
+      text-decoration: none;
+      color: #ff1493;
+    }
+
+    input[type="search"] {
+      width: 200px;
+      height: 35px;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      border-radius: 5px;
+      z-index: 10;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #ff1493;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #ffe0ec;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<!-- Header Section -->
+<div class="header-section">
+	<header style="display: flex; align-items: center; justify-content: space-between; padding: 1px 2px; border-bottom: 2px solid #FE7D6A60;">
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		  <img src="logo.png" alt="Skapis Logo" class="logo" style="width: 90px; height: 70px; object-fit: contain;">
+		  <h1 class="company-name" style="margin: 0px 0 0 0; font-size: 35px;">
+			<a href="index.html" style="text-decoration: none; color: #FF1493; ">Skapis</a>
+		  </h1>
+		</div>
+		<input type="search" placeholder="Search...">
+		
+	  <button onclick="location.href='newpage.html'" style="background: none; border: none; cursor: pointer;">
+		<div class="dropdown">
+			<img src="icon.png" alt="User Icon" style="width: 40px; height: 40px;">
+			<div class="dropdown-content">
+				<a href="shopPreview.html">Add Product</a>
+				<a href="messages.html">Messages</a>
+				<a href="wallet.html">Wallet</a>
+				<a href="rating.html">Rating and Comments</a>
+
+			</div>
+		</div>
+	  </button>
+	</header>
+</div>
+<!-- Wallet Section -->
+<div class="wallet-container">
+  <h2>My Wallet</h2>
+  <div class="wallet-section">
+    <p><strong>Products Sold:</strong> <span class="highlight" id="soldCount">0</span></p>
+    <p><strong>Total Revenue:</strong> €<span class="highlight" id="totalRevenue">0.00</span></p>
+    <p><strong>Estimated Tax (15%):</strong> €<span class="highlight" id="tax">0.00</span></p>
+    <p><strong>Net Earnings:</strong> €<span class="highlight" id="net">0.00</span></p>
+  </div>
+  <div class="virtual-card">
+    <h3>Virtual Card Balance</h3>
+    <p><strong>Balance:</strong> €<span id="cardBalance">100.00</span></p>
+    <label for="addAmount">Add Funds (€):</label>
+    <input type="number" id="addAmount" placeholder="Enter amount to add">
+    <button onclick="addFunds()">Add Funds</button>
+    <br><br>
+    <label for="withdrawAmount">Withdraw Funds (€):</label>
+    <input type="number" id="withdrawAmount" placeholder="Enter amount to withdraw">
+    <button onclick="withdrawFunds()">Withdraw</button>
+  </div>
+  <div class="wallet-section">
+    <h3>Transaction History</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody id="transactionTable"></tbody>
+    </table>
+  </div>
+</div>
+<script>
+  const soldCount = 12;
+  const revenue = 240;
+  const taxRate = 0.15;
+  let balance = parseFloat(localStorage.getItem("virtualCardBalance")) || 100.00;
+  let transactions = JSON.parse(localStorage.getItem("cardTransactions")) || [
+    { type: "Initial Balance", amount: balance, date: new Date().toLocaleString() }
+  ];
+  document.getElementById("soldCount").textContent = soldCount;
+  document.getElementById("totalRevenue").textContent = revenue.toFixed(2);
+  document.getElementById("tax").textContent = (revenue * taxRate).toFixed(2);
+  document.getElementById("net").textContent = (revenue * (1 - taxRate)).toFixed(2);
+  document.getElementById("cardBalance").textContent = balance.toFixed(2);
+  function logTransaction(type, amount) {
+    transactions.push({ type, amount, date: new Date().toLocaleString() });
+    localStorage.setItem("cardTransactions", JSON.stringify(transactions));
+    renderTransactionTable();
+  }
+  function renderTransactionTable() {
+    const table = document.getElementById("transactionTable");
+    table.innerHTML = transactions.map(t =>
+      `<tr><td>${t.date}</td><td>${t.type}</td><td>€${t.amount.toFixed(2)}</td></tr>`
+    ).join('');
+  }
+
+  function addFunds() {
+    const input = document.getElementById("addAmount");
+    const amount = parseFloat(input.value);
+    if (isNaN(amount) || amount <= 0) {
+      alert("Enter a valid amount to add.");
+      return;
+    }
+    balance += amount;
+    localStorage.setItem("virtualCardBalance", balance.toFixed(2));
+    document.getElementById("cardBalance").textContent = balance.toFixed(2);
+    input.value = '';
+    logTransaction("Add Funds", amount);
+  }
+  function withdrawFunds() {
+    const input = document.getElementById("withdrawAmount");
+    const amount = parseFloat(input.value);
+    if (isNaN(amount) || amount <= 0 || amount > balance) {
+      alert("Invalid withdrawal amount.");
+      return;
+    }
+    balance -= amount;
+    localStorage.setItem("virtualCardBalance", balance.toFixed(2));
+    document.getElementById("cardBalance").textContent = balance.toFixed(2);
+    input.value = '';
+    logTransaction("Withdraw", -amount);
+  }
+  window.onload = renderTransactionTable;
+</script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Address Information - Skapis</title>
+  <link rel="stylesheet" href="styles2.css">
+  <style>
+    .address-container {
+      padding: 40px;
+      background-color: #fff;
+      max-width: 600px;
+      margin: 30px auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .address-container h2 {
+      color: #fc6601;
+      margin-bottom: 20px;
+    }
+
+    .address-container label {
+      display: block;
+      margin-top: 15px;
+      color: #ff1493;
+      font-weight: bold;
+    }
+
+    .address-container input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 5px;
+    }
+
+    .button-group {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .btn-save {
+      background-color: #28a745;
+    }
+
+    .btn-edit {
+      background-color: #ffc107;
+      color: #000;
+    }
+
+    /* Dropdown menu */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      border-radius: 5px;
+      z-index: 10;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #ff1493;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #ffe0ec;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    /* Top layout match */
+    .brand-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
+
+    .company-name {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .company-name a {
+      text-decoration: none;
+      color: #ff1493;
+    }
+
+    input[type="search"] {
+      width: 200px;
+      height: 35px;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header-section">
+	<header style="display: flex; align-items: center; justify-content: space-between; padding: 1px 2px; border-bottom: 2px solid #FE7D6A60;">
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		  <img src="logo.png" alt="Skapis Logo" class="logo" style="width: 90px; height: 70px; object-fit: contain;">
+		  <h1 class="company-name" style="margin: 0px 0 0 0; font-size: 35px;">
+			<a href="index.html" style="text-decoration: none; color: #FF1493; ">Skapis</a>
+		  </h1>
+		</div>
+		<input type="search" placeholder="Search...">
+		
+	  <button onclick="location.href='newpage.html'" style="background: none; border: none; cursor: pointer;">
+		<div class="dropdown">
+			<img src="icon.png" alt="User Icon" style="width: 40px; height: 40px;">
+			<div class="dropdown-content">
+				<a href="accountInfo.html">Account Info</a>
+				<a href="addressInfo.html">Address Info</a>
+				<a href="billingInfo.html">Billing Info</a>
+				<a href="orders.html">Your Orders</a>
+				<a href="helpCenter.html">Help Center</a>
+				<a href="createShop.html">Create Shop</a>
+			</div>
+		</div>
+	  </button>
+	</header>
+</div>
+
+<div class="address-container">
+  <h2>Address Information</h2>
+
+  <label for="fullName">Full Name:</label>
+  <input type="text" id="fullName" value="Jane Doe" disabled>
+
+  <label for="street">Street Address:</label>
+  <input type="text" id="street" value="123 Maple Street" disabled>
+
+  <label for="city">City:</label>
+  <input type="text" id="city" value="Riga" disabled>
+
+  <label for="state">State/Province:</label>
+  <input type="text" id="state" value="Riga Region" disabled>
+
+  <label for="zip">ZIP/Postal Code:</label>
+  <input type="text" id="zip" value="LV-1010" disabled>
+
+  <label for="country">Country:</label>
+  <input type="text" id="country" value="Latvia" disabled>
+
+  <div class="button-group">
+    <button class="btn btn-save" onclick="saveAddress()">Save</button>
+    <button class="btn btn-edit" onclick="enableEdit()">Edit</button>
+  </div>
+</div>
+
+<script>
+  function enableEdit() {
+    document.querySelectorAll('.address-container input').forEach(input => input.disabled = false);
+  }
+
+  function saveAddress() {
+    const address = {
+      fullName: document.getElementById('fullName').value,
+      street: document.getElementById('street').value,
+      city: document.getElementById('city').value,
+      state: document.getElementById('state').value,
+      zip: document.getElementById('zip').value,
+      country: document.getElementById('country').value
+    };
+    localStorage.setItem('addressInfo', JSON.stringify(address));
+    alert('Address saved!');
+    document.querySelectorAll('.address-container input').forEach(input => input.disabled = true);
+  }
+
+  window.onload = function () {
+    const saved = localStorage.getItem('addressInfo');
+    if (saved) {
+      const data = JSON.parse(saved);
+      document.getElementById('fullName').value = data.fullName || '';
+      document.getElementById('street').value = data.street || '';
+      document.getElementById('city').value = data.city || '';
+      document.getElementById('state').value = data.state || '';
+      document.getElementById('zip').value = data.zip || '';
+      document.getElementById('country').value = data.country || '';
+    }
+  };
+</script>
+
+</body>
+</html>

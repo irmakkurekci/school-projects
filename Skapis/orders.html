@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Orders - Skapis</title>
+  <link rel="stylesheet" href="styles2.css">
+  <style>
+    .orders-container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 40px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .orders-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .orders-header h2 {
+      color: #fc6601;
+    }
+
+    .order {
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+
+    .order:last-child {
+      border-bottom: none;
+    }
+
+    .order p {
+      margin: 5px 0;
+      font-size: 16px;
+    }
+
+    .order a {
+      color: #ff1493;
+      text-decoration: underline;
+    }
+		  .dropdown-content {
+			display: none;
+			position: absolute;
+			right: 0;
+			background-color: white;
+			min-width: 160px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+			border-radius: 5px;
+			z-index: 10;
+		  }
+
+		  .dropdown-content a {
+			display: block;
+			padding: 10px 15px;
+			text-decoration: none;
+			color: #ff1493;
+			transition: background 0.2s;
+		  }
+
+		  .dropdown-content a:hover {
+			background-color: #ff660180; /* orange!! with 50% opacity */
+		  }
+
+		  .dropdown:hover .dropdown-content {
+			display: block;
+		  }
+		  
+  </style>
+</head>
+<body>
+<div class="header-section">
+	<header style="display: flex; align-items: center; justify-content: space-between; padding: 1px 2px; border-bottom: 2px solid #FE7D6A60;">
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		  <img src="logo.png" alt="Skapis Logo" class="logo" style="width: 90px; height: 70px; object-fit: contain;">
+		  <h1 class="company-name" style="margin: 0px 0 0 0; font-size: 35px;">
+			<a href="index.html" style="text-decoration: none; color: #FF1493; ">Skapis</a>
+		  </h1>
+		</div>
+		<input type="search" id="searchInput" placeholder="Search..." onkeyup="filterProducts()">
+		
+		
+	  <button onclick="location.href='newpage.html'" style="background: none; border: none; cursor: pointer;">
+		<div class="dropdown">
+			<img src="icon.png" alt="User Icon" style="width: 40px; height: 40px;">
+			<div class="dropdown-content">
+				<a href="accountInfo.html">Account Info</a>
+				<a href="addressInfo.html">Address Info</a>
+				<a href="billingInfo.html">Billing Info</a>
+				<a href="orders.html">Your Orders</a>
+				<a href="helpCenter.html">Help Center</a>
+				<a href="createShop.html">Create Shop</a>
+			</div>
+		</div>
+	  </button>
+	</header>
+</div>
+
+  <div class="orders-container">
+    <div class="orders-header">
+      <h2>Orders of Account: irmakk13</h2>
+    </div>
+
+    <div class="order">
+      <p><strong>Order #1001</strong></p>
+      <p>Product: Handmade Bracelet</p>
+      <p>From Shop: Elegant Knots (Owner: @nora_handmade)</p>
+      <p>Status: Delivered</p>
+      <p>Total: €15.00</p>
+      <p><a href="https://www.dpd.com/tracking/1001" target="_blank">Track with DPD</a></p>
+    </div>
+
+    <div class="order">
+      <p><strong>Order #1002</strong></p>
+      <p>Product: Iron Maiden T-shirt</p>
+      <p>From Shop: RockVibes (Owner: @metalhead23)</p>
+      <p>Status: Shipped</p>
+      <p>Total: €25.00</p>
+      <p><a href="https://www.dpd.com/tracking/1002" target="_blank">Track with DPD</a></p>
+    </div>
+
+    <div class="order">
+      <p><strong>Order #1003</strong></p>
+      <p>Product: Slightly Used Bag</p>
+      <p>From Shop: Urban PreLoved (Owner: @reusegirl)</p>
+      <p>Status: Delivered</p>
+      <p>Total: €20.00</p>
+      <p><a href="https://www.dpd.com/tracking/1003" target="_blank">Track with DPD</a></p>
+    </div>
+
+    <div class="order">
+      <p><strong>Order #1004</strong></p>
+      <p>Product: Handmade Clay Earrings</p>
+      <p>From Shop: ClayLoop (Owner: @emma_creates)</p>
+      <p>Status: Cancelled</p>
+      <p>Total: €12.00</p>
+      <p><a href="https://www.dpd.com/tracking/1004" target="_blank">Track with DPD</a></p>
+    </div>
+
+    <div class="order">
+      <p><strong>Order #1005</strong></p>
+      <p>Product: Recycled Notebook Set</p>
+      <p>From Shop: EcoStationery (Owner: @zero_waste)</p>
+      <p>Status: Delivered</p>
+      <p>Total: €9.50</p>
+      <p><a href="https://www.dpd.com/tracking/1005" target="_blank">Track with DPD</a></p>
+    </div>
+
+    <div class="order">
+      <p><strong>Order #1006</strong></p>
+      <p>Product: Vintage Sunglasses</p>
+      <p>From Shop: RetroFinds (Owner: @vintagemax)</p>
+      <p>Status: Shipped</p>
+      <p>Total: €30.00</p>
+      <p><a href="https://www.dpd.com/tracking/1006" target="_blank">Track with DPD</a></p>
+    </div>
+
+    <div class="order">
+      <p><strong>Order #1007</strong></p>
+      <p>Product: Minimalist Poster Set</p>
+      <p>From Shop: WallFlow (Owner: @artprintlena)</p>
+      <p>Status: Delivered</p>
+      <p>Total: €18.00</p>
+      <p><a href="https://www.dpd.com/tracking/1007" target="_blank">Track with DPD</a></p>
+    </div>
+
+    <div class="order">
+      <p><strong>Order #1008</strong></p>
+      <p>Product: Eco-Friendly Tote Bag</p>
+      <p>From Shop: GreenStuff (Owner: @plantlady)</p>
+      <p>Status: Cancelled</p>
+      <p>Total: €14.99</p>
+      <p><a href="https://www.dpd.com/tracking/1008" target="_blank">Track with DPD</a></p>
+    </div>
+  </div>
+</body>
+</html>

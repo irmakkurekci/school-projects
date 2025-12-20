@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rating - Skapis</title>
+  <link rel="stylesheet" href="styles2.css">
+  <style>
+    .rating-container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 40px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .rating-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .rating-header h2 {
+      color: #fc6601;
+      font-size: 28px;
+    }
+
+    .stars {
+      font-size: 24px;
+      color: gold;
+      margin-top: 10px;
+    }
+
+    .average-rating {
+      font-size: 20px;
+      color: #ff1493;
+    }
+
+    .review {
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+
+    .review:last-child {
+      border-bottom: none;
+    }
+
+    .review .stars {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .review .comment {
+      font-size: 16px;
+    }
+
+    .review .user {
+      font-weight: bold;
+      color: #555;
+    }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      border-radius: 5px;
+      z-index: 10;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #ff1493;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #ffe0ec;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<!-- Header Section -->
+<div class="header-section">
+	<header style="display: flex; align-items: center; justify-content: space-between; padding: 1px 2px; border-bottom: 2px solid #FE7D6A60;">
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		  <img src="logo.png" alt="Skapis Logo" class="logo" style="width: 90px; height: 70px; object-fit: contain;">
+		  <h1 class="company-name" style="margin: 0px 0 0 0; font-size: 35px;">
+			<a href="index.html" style="text-decoration: none; color: #FF1493; ">Skapis</a>
+		  </h1>
+		</div>
+		<input type="search" placeholder="Search...">
+		
+	  <button onclick="location.href='newpage.html'" style="background: none; border: none; cursor: pointer;">
+		<div class="dropdown">
+			<img src="icon.png" alt="User Icon" style="width: 40px; height: 40px;">
+			<div class="dropdown-content">
+				<a href="shopPreview.html">Add Product</a>
+				<a href="messages.html">Messages</a>
+				<a href="wallet.html">Wallet</a>
+				<a href="rating.html">Rating and Comments</a>
+
+			</div>
+		</div>
+	  </button>
+	</header>
+</div>
+  <div class="rating-container">
+    <div class="rating-header">
+      <h2>TheShop Rating & Comments</h2>
+      <div class="average-rating">4.5 out of 5</div>
+      <div class="stars">
+        ⭐⭐⭐⭐⭐
+      </div>
+    </div>
+
+    <div class="review">
+      <div class="user">@julia_fashion</div>
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="comment">Amazing products and fast delivery. Totally satisfied!</div>
+    </div>
+    <div class="review">
+      <div class="user">@shopper123</div>
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="comment">Great quality and very friendly seller.</div>
+    </div>
+    <div class="review">
+      <div class="user">@marko.lv</div>
+      <div class="stars">⭐⭐⭐⭐</div>
+      <div class="comment">Product was good but delivery took a little longer than expected.</div>
+    </div>
+    <div class="review">
+      <div class="user">@greenleaf</div>
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="comment">Loved the packaging and attention to detail.</div>
+    </div>
+    <div class="review">
+      <div class="user">@sunflower99</div>
+      <div class="stars">⭐⭐⭐</div>
+      <div class="comment">Item was okay but didn't match the description exactly.</div>
+    </div>
+    <div class="review">
+      <div class="user">@lena_buyer</div>
+      <div class="stars">⭐⭐⭐⭐</div>
+      <div class="comment">Very responsive and helpful with my questions.</div>
+    </div>
+    <div class="review">
+      <div class="user">@anton_riga</div>
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="comment">Excellent service! Will definitely order again.</div>
+    </div>
+    <div class="review">
+      <div class="user">@thelocalshop</div>
+      <div class="stars">⭐⭐⭐⭐</div>
+      <div class="comment">Nice variety of products and fair pricing.</div>
+    </div>
+  </div>
+</body>
+</html>
