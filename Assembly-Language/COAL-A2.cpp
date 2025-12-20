@@ -200,7 +200,7 @@ int solution_for_grade_9(int x, int y, int z)
 
 int main()
 {
-    // Note the 32-bit signed int value range is –2’147’483’648 .. 2’147’483’647
+    // Note the 32-bit signed int value range is â€“2â€™147â€™483â€™648 .. 2â€™147â€™483â€™647
     int f = 320000;
     int s = -250000;
     int t = 122000;
