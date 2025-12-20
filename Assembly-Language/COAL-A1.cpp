@@ -13,7 +13,7 @@
 
 short solution_for_grade_7(short x, short y, short z)
 {
-    // Selected variant: Variant 1, Expression: 5XY – 4(Z – Y)
+    // Selected variant: Variant 1, Expression: 5XY â€“ 4(Z â€“ Y)
 
     short result;
     __asm
@@ -27,7 +27,7 @@ short solution_for_grade_7(short x, short y, short z)
         sub bx, y          // bx = z - y
         imul bx, 4          // bx = 4 * (z - y)
 
-        sub ax, bx          // ax = 5XY – 4(Z – Y)
+        sub ax, bx          // ax = 5XY â€“ 4(Z â€“ Y)
 
         // Save result
         mov[result], ax     // result = ax
@@ -41,7 +41,7 @@ short solution_for_grade_7(short x, short y, short z)
 
 short solution_for_grade_9(short x, short y, short z)
 {
-    // Selected variant: Variant 1, Expression: 5XY – 4(Z – Y)
+    // Selected variant: Variant 1, Expression: 5XY â€“ 4(Z â€“ Y)
 
     short result;
     short denominator; // We will store (3Y - 2Z) in this variable
@@ -58,7 +58,7 @@ short solution_for_grade_9(short x, short y, short z)
         imul bx, 4          // bx = 4 * (z - y)
 
 
-        sub ax, bx          // ax = 5XY – 4(Z – Y)
+        sub ax, bx          // ax = 5XY â€“ 4(Z â€“ Y)
 
 
         mov bx, y           // bx = y
@@ -74,9 +74,9 @@ short solution_for_grade_9(short x, short y, short z)
         cmp bx, 0
         je division_by_zero  // Jump if denominator is zero
 
-        //  (5XY – 4(Z – Y)) / (3Y - 2Z)
+        //  (5XY â€“ 4(Z â€“ Y)) / (3Y - 2Z)
         cwd                 // Sign extend AX into DX:AX for division
-        idiv bx             // ax = (5XY – 4(Z – Y)) / (3Y - 2Z)
+        idiv bx             // ax = (5XY â€“ 4(Z â€“ Y)) / (3Y - 2Z)
 
         // Store result
         mov[result], ax     // result = ax
