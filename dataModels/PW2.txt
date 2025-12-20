@@ -1,0 +1,969 @@
+REM   Script: PW2 DMDS GROUP 03 LAST
+REM   This is the final version of livesql for DMDS Group 03
+
+CREATE OR REPLACE TYPE PLANE AS OBJECT (    
+    -- Define the PLANE object type, representing planes.    
+    -- Each plane has an ID, MODEL, SIZE, WEIGHT and NAME for identification and description.    
+    -- PLANE objects are referenced in FLIGHT via REF to    
+    -- specify planes used in various flights.    
+    
+    ID      NUMBER,                 -- Unique identifier for planes    
+    MODEL    VARCHAR2(50 CHAR), 	-- Model of the plane   
+    P_SIZE	VARCHAR2(50 CHAR),		-- Size of the plane   
+    WEIGHT NUMBER,					-- Weight of the plane   
+    NAME VARCHAR2(50 CHAR),			-- Name of the plane   
+      
+    -- Member functions to get weight and size of planes  
+    MAP MEMBER FUNCTION get_weight RETURN NUMBER,  
+     
+    MEMBER FUNCTION get_size RETURN VARCHAR2  
+     
+); 
+/
+
+CREATE TABLE PLANES OF PLANE (    
+    -- Create the PLANES table based on the PLANE object type, with ID    
+    -- as the primary key. This table stores all planes used in the system.    
+    -- Planes in this table are linked to flights.    
+    
+    ID PRIMARY KEY                  -- Primary key to ensure unique planes    
+);
+
+BEGIN    
+    -- Insert data into PLANES table for various planes.    
+    INSERT INTO PLANES VALUES (PLANE(1, 'Airbus', 'Jumbo', 50, 'Anamur'));    
+    INSERT INTO PLANES VALUES (PLANE(2, 'Boeing', 'Small', 36, 'Kizilyildiz'));    
+    INSERT INTO PLANES VALUES (PLANE(3, 'Boeing', 'Small', 40, 'Ankara'));    
+END;
+/
+
+SELECT * FROM PLANES    
+    -- Retrieve all data from the PLANES table to verify    
+    -- that the data has been inserted correctly. ;
+
+CREATE OR REPLACE TYPE INFRASTRUCTURE AS OBJECT (  
+    -- Define the INFRASTRUCTURE object type
+    -- Contains a UNIT_ID, UNIT_NAME, STATUS, and maintenance_date  
+    -- INFRASTRUCTURE serves as a base for specific types,
+  
+    UNIT_ID              NUMBER,                    -- Unique identifier for infrastructure  
+    UNIT_NAME            VARCHAR2(50 CHAR),        -- Name of the infrastructure  
+    STATUS     VARCHAR2(20 CHAR),        -- status of the infrastructure  
+    MAINTENANCE_DATE DATE,    -- Maintenance date of infrastructure
+      
+    -- MEMBER FUNCTIOn whether it needs maintenance
+    MEMBER FUNCTION needs_maintenance RETURN VARCHAR2,  
+  
+    -- General function to get a name of the infrastructure  
+    MEMBER FUNCTION get_name RETURN VARCHAR2, 
+   -- General function to get status of the infrastructure 
+    MEMBER FUNCTION get_status RETURN VARCHAR2 
+  
+) NOT FINAL; 
+/
+
+CREATE OR REPLACE TYPE RUNWAYS UNDER INFRASTRUCTURE (  
+    -- Define the RUNWAYS subtype under INFRASTRUCTURE. It includes  
+    -- specific properties like LENGTH and DISTANCE_BUILDING  
+ 
+  
+    LENGTH     NUMBER,                     -- Length of the runway  
+    DISTANCE_BUILDING  NUMBER,         -- Distance to building  
+  
+    -- Specific description for runway
+    OVERRIDING MEMBER FUNCTION needs_maintenance RETURN VARCHAR2, 
+    OVERRIDING MEMBER FUNCTION get_name RETURN VARCHAR2 
+); 
+/
+
+CREATE OR REPLACE TYPE MACHINARY UNDER INFRASTRUCTURE (  
+    -- Define the MACHINARY subtype under INFRASTRUCTURE. It includes  
+    -- specific properties like type.  
+
+  
+    TYPE     NUMBER,                     -- Type of the machinary  
+             
+  
+    -- Specific description for i MACHINARY
+    OVERRIDING MEMBER FUNCTION needs_maintenance RETURN VARCHAR2, 
+    OVERRIDING MEMBER FUNCTION get_name RETURN VARCHAR2 
+); 
+/
+
+CREATE OR REPLACE TYPE GATES UNDER INFRASTRUCTURE (  
+    -- Define the GATES subtype under INFRASTRUCTURE. It includes  
+    -- specific properties like TERMINAL_NO and TERMINAL_TYPE.  
+  
+  
+    TERMINAL_NO     NUMBER,   --Terminal_no for gates
+    TERMINAL_TYPE     NUMBER,  --terminal type for gates
+             
+  
+    -- Specific description for injection medication  
+    OVERRIDING MEMBER FUNCTION needs_maintenance RETURN VARCHAR2, 
+    OVERRIDING MEMBER FUNCTION get_name RETURN VARCHAR2 
+); 
+/
+
+CREATE TABLE INFRASTRUCTURES OF INFRASTRUCTURE (  
+    -- Create the INFRASTRUCTURES table based on the INFRASTRUCTURE object type. This  
+    -- table holds various infrastructures, each with a unique ID 
+  
+    UNIT_ID PRIMARY KEY                              -- Primary key for each infrastructure  
+  
+);
+
+BEGIN  
+    -- Insert a infrastructure into the INFRASTRUCTURES table  
+    INSERT INTO INFRASTRUCTURES VALUES (  
+        INFRASTRUCTURE(1, 'Group Alpha', 'Avaliable',TO_DATE('2024/12/02 21:02:44', 'yyyy/mm/dd hh24:mi:ss')   
+                   )  
+    );  
+      
+     -- Insert a infrastructure into the INFRASTRUCTURES table 
+    INSERT INTO INFRASTRUCTURES VALUES (  
+        RUNWAYS(101, 'Group Alpha', 'Avaliable', TO_DATE('2024/12/02 21:02:44', 'yyyy/mm/dd hh24:mi:ss'),  
+                             245, 70)  
+    );  
+      
+     -- Insert a infrastructure into the INFRASTRUCTURES table 
+    INSERT INTO INFRASTRUCTURES VALUES (  
+        MACHINARY(102, 'Group Alpha', 'Avaliable', TO_DATE('2024/12/02 21:02:44', 'yyyy/mm/dd hh24:mi:ss'),  
+                             3) 
+    );  
+      
+     -- Insert a infrastructure into the INFRASTRUCTURES table 
+    INSERT INTO INFRASTRUCTURES VALUES (  
+        GATES(103, 'Group Alpha', 'Avaliable', TO_DATE('2024/12/02 21:02:44', 'yyyy/mm/dd hh24:mi:ss'),  
+                             5, 1) 
+    );  
+END;
+/
+
+SELECT   
+    -- This query retrieves all detailed information from the INFRASTRUCTURES table,  
+    
+  
+  
+    I.UNIT_ID,                             -- Unique ID for each infrastructure  
+    I.UNIT_NAME,                         -- Name of the infrastructure  
+    I.STATUS,    --Status of the infrastructure
+    I.MAINTENANCE_DATE,   --Maintenance date of infrastructure
+     
+    -- Display runway length and distance building for RUNWAYS subtype  
+    CASE   
+        WHEN VALUE(I) IS OF (RUNWAYS) THEN   
+            TREAT(VALUE(I) AS RUNWAYS).LENGTH   
+    END AS LENGTH,  
+      
+    CASE   
+        WHEN VALUE(I) IS OF (RUNWAYS) THEN   
+            TREAT(VALUE(I) AS RUNWAYS).DISTANCE_BUILDING   
+    END AS DISTANCE_BUILDING,  
+      
+-- Display machinary type MACHINARY subtype  
+    CASE   
+        WHEN VALUE(I) IS OF (MACHINARY) THEN   
+            TREAT(VALUE(I) AS MACHINARY).TYPE   
+    END AS TYPE,  
+      
+-- Display terminal_no and terminal_type  for GATES subtype  
+   CASE   
+        WHEN VALUE(I) IS OF (GATES) THEN   
+            TREAT(VALUE(I) AS GATES).TERMINAL_NO   
+    END AS TERMINAL_NO,  
+ 
+    CASE   
+        WHEN VALUE(I) IS OF (GATES) THEN   
+            TREAT(VALUE(I) AS GATES).TERMINAL_TYPE   
+    END AS TERMINAL_TYPE  
+  
+FROM   
+    INFRASTRUCTURES I   
+  
+ORDER BY   
+	I.UNIT_ID    -- Order by infrastructure and unit_IDs for clarity ;
+
+CREATE OR REPLACE TYPE PASSENGER AS OBJECT(  
+    -- Define the PASSENGER object type with a passport number
+    -- and a member function get_flights that returns a SYS_REFCURSOR  
+  
+    -- passport number for passenger
+    PASSPORT_NUM VARCHAR2(50 CHAR),  
+    -- Function to fetch a cursor for this passenger  
+    MEMBER FUNCTION GET_FLIGHTS RETURN SYS_REFCURSOR  
+); 
+/
+
+CREATE OR REPLACE TYPE MANAGERS AS OBJECT(   
+    -- Define the MANAGERS object type with a register_no
+    -- and a member function get_flights that returns a SYS_REFCURSOR 
+  --also another member function to get_type of the manager
+   
+    -- register_no for manager
+    REGISTER_NO VARCHAR2(50 CHAR),   
+    TYPE VARCHAR2(50 CHAR),  
+    -- Function to fetch a cursor  for this manager   
+    MEMBER FUNCTION GET_FLIGHTS RETURN SYS_REFCURSOR,  
+  --Function to get type for managers
+    MEMBER FUNCTION get_type RETURN VARCHAR2 
+); 
+/
+
+CREATE OR REPLACE TYPE PERSON AS OBJECT(  
+    -- Define the PERSON object type, representing a general person with attributes  
+    -- such as ID, name, and date of birth. The type also contains attributes  
+    -- for passenger and manager data (using embedded object types) and functions.  
+  
+    ID              NUMBER,                     -- Unique identifier for the person  
+    NAME            VARCHAR2(50 CHAR),          -- First name of the person  
+    SURNAME         VARCHAR2(50 CHAR),          -- Last name of the person  
+    DATE_OF_BIRTH   DATE,                       -- Date of birth of the person  
+      
+    PASSENGER_DATA    PASSENGER,                    -- Data if the person is a passenger  
+    MANAGERS_DATA     MANAGERS,                     -- Data if the person is a manager  
+      
+   
+     
+  --Function to fetch_flight based on the person type
+    MEMBER FUNCTION FETCH_FLIGHTS(pers_type IN VARCHAR2) RETURN SYS_REFCURSOR,  
+      
+  --Function to get_flight
+    MEMBER FUNCTION GET_FLIGHTS RETURN SYS_REFCURSOR  
+); 
+/
+
+CREATE TABLE PEOPLE OF PERSON(  
+    -- Create a table PEOPLE using the PERSON object type.  
+    -- The table's primary key is the ID attribute from the PERSON type,  
+    -- ensuring each person has a unique identifier.  
+  
+    ID PRIMARY KEY  
+);
+
+BEGIN  
+  
+-- Insert a `Person` with only `PASSENGER_DATA`  
+INSERT INTO PEOPLE VALUES (  
+    PERSON(  
+        ID => 1,  
+        NAME => 'Kayra',  
+        SURNAME => 'Akel',  
+        DATE_OF_BIRTH => TO_DATE('2004-10-05', 'YYYY-MM-DD'),  
+        PASSENGER_DATA => PASSENGER('U101593412'),  -- Only PASSENGER_DATA populated  
+        MANAGERS_DATA => NULL                      -- No MANAGERS_DATA  
+    )  
+);  
+  
+-- Insert a `Person` with only `MANAGERS_DATA`  
+INSERT INTO PEOPLE VALUES (  
+    PERSON(  
+        ID => 2,  
+        NAME => 'Kullu',  
+        SURNAME => 'Kenan',  
+        DATE_OF_BIRTH => TO_DATE('1988-09-29', 'YYYY-MM-DD'),  
+        PASSENGER_DATA => NULL,                    -- No PASSENGER_DATA  
+        MANAGERS_DATA => MANAGERS(8900, 'Traffic Manager') -- Only MANAGERS_DATA populated  
+    )  
+);  
+  
+-- Insert a `Person` with both `PASSANGER_DATA` and `MANAGERS_DATA`  
+INSERT INTO PEOPLE VALUES (  
+    PERSON(  
+        ID => 3,  
+        NAME => 'Yaprak',  
+        SURNAME => 'Dokumu',  
+        DATE_OF_BIRTH => TO_DATE('1993-10-10', 'YYYY-MM-DD'),  
+        PASSENGER_DATA => PASSENGER('U6758793'),  -- PASSANGER_DATA populated  
+        MANAGERS_DATA => MANAGERS(34000, 'Security Manager') -- MANAGERS_DATA populated  
+    )  
+);  
+  
+-- Insert a `Person` with neither `PASSENGER_DATA` nor `MANAGER_DATA`  
+INSERT INTO PEOPLE VALUES (  
+    PERSON(  
+        ID => 4,  
+        NAME => 'Curuk',  
+        SURNAME => 'Elma',  
+        DATE_OF_BIRTH => TO_DATE('1990-11-08', 'YYYY-MM-DD'),  
+        PASSENGER_DATA => NULL,                    -- No PASSENGER_DATA  
+        MANAGERS_DATA => NULL                      -- No MANAGER_DATA  
+    )  
+);  
+  
+-- Insert another `Person` with only `PASSENGER_DATA`  
+INSERT INTO PEOPLE VALUES (  
+    PERSON(  
+        ID => 5,  
+        NAME => 'Yasak',  
+        SURNAME => 'Ask',  
+        DATE_OF_BIRTH => TO_DATE('1990-11-09', 'YYYY-MM-DD'),  
+        PASSENGER_DATA => PASSENGER('A6784325'),  -- Only PASSENGER_DATA populated  
+        MANAGERS_DATA => NULL                      -- No MANAGERS_DATA  
+    )  
+);  
+  
+END; 
+/
+
+SELECT * FROM PEOPLE;
+
+SELECT  
+    -- This query retrieves detailed information from the PEOPLE table.  
+    -- It displays basic details (e.g., ID, name, and date of birth) along   
+    -- with specific details from the `PASSENGER_DATA` and `MANAGERS_DATA`   
+    -- subtypes if they are populated.  
+    
+  
+    P.ID AS PASSENGER_ID,                            -- Unique ID for the person  
+    P.NAME AS FIRST_NAME,                         -- First name of the person  
+    P.SURNAME AS LAST_NAME,                       -- Last name of the person  
+    P.DATE_OF_BIRTH,                              -- Date of birth of the person  
+  
+    -- Retrieve passport_number if the person has PASSENGER_DATA populated  
+    CASE   
+        WHEN P.PASSENGER_DATA IS NOT NULL THEN   
+            TREAT(P.PASSENGER_DATA AS PASSENGER).PASSPORT_NUM  
+    END AS PASSPORT_NUM,  
+      
+    -- Retrieve register number and salary if the person has MANAGERS_DATA populated  
+    CASE   
+        WHEN P.MANAGERS_DATA IS NOT NULL THEN   
+            TREAT(P.MANAGERS_DATA AS MANAGERS).REGISTER_NO   
+    END AS REGISTER_NO,  
+  
+    CASE   
+        WHEN P.MANAGERS_DATA IS NOT NULL THEN   
+            TREAT(P.MANAGERS_DATA AS MANAGERS).TYPE   
+    END AS MANAGER_TYPE  
+      
+FROM   
+    PEOPLE P  
+ORDER BY   
+    P.ID;
+
+CREATE OR REPLACE TYPE INFRASTRUCTURE_TABLE AS OBJECT (  
+    -- Define the INFRASTRUCTURE_TABLE object type to link an infrastructure  
+    -- to a flight. Each entry includes an ID, infra_data, and a REF to the  
+    -- corresponding infrastructure  in INFRASTRUCTURE.  
+  
+    ID                  NUMBER,       -- Unique identifier for the link entry  
+    INFRA_DATE           DATE,       -- Infrastructure date 
+    REF_INFRASTRUCTURE      REF INFRASTRUCTURE -- REF linking to an infrastructure  
+);
+/
+
+CREATE TYPE INFRASTRUCTURE_TABLES AS TABLE OF INFRASTRUCTURE_TABLE  
+    -- Define a collection type INFRASTRUCTURE_TABLES as a table of  
+    -- INFRASTRUCTURE_TABLE objects, allowing multiple infrastructure for one  
+    -- flight.
+/
+
+CREATE OR REPLACE TYPE FLIGHT AS OBJECT (    
+    -- Define the FLIGHT object type    
+    -- Each flight includes a flight number, actual and scheduled arrival and departure date, and   delay reason
+    -- REFs to the passenger, manager, plane and infrastructure table involved.    
+    
+    FLIGHT_NO             NUMBER,              -- Unique flight number    
+    SCH_ARRIVAL_TIME             DATE,                -- Date and time for scheduled arrival time
+    ACT_ARRIVAL_TIME          DATE,   -- Date and time for actual arrival time
+    SCH_DPT_TIME     DATE,         -- Date and time for scheduled departure time
+    ACT_DPT_TIME 		DATE,				  -- Date and time for actual departure time
+	DELAY_REASON VARCHAR2(50 CHAR),   --Delay reason
+	   
+       
+    REF_PASSENGER     REF PERSON,          -- REF to passenger in PEOPLE    
+    REF_MANAGERS      REF PERSON,          -- REF to managers in PEOPLE    
+    REF_PLANE  REF PLANE,      -- REF to plane in PLANES    
+ 	INFRA_LIST INFRASTRUCTURE_TABLES,   
+       
+    -- The procedure to display the main details of a flights    
+    MEMBER PROCEDURE SHOW,    
+    -- The procedure to create a new flight    
+    STATIC PROCEDURE ADD_FLIGHT(    
+        p_flight_no   IN NUMBER,    
+        p_sch_arr    IN DATE,    
+        p_act_arr IN DATE,   
+    	p_sch_dep IN DATE,   
+    	p_act_dep IN DATE,   
+    	p_delay IN VARCHAR2   
+    ),    
+    -- ORDER method to compare two FLIGHTS objects    
+    ORDER MEMBER FUNCTION compare(other FLIGHT) RETURN INTEGER    
+); 
+/
+
+CREATE TABLE FLIGHTS OF FLIGHT (  
+    -- Create the FLIGHTS table based on the FLIGHT object type.  
+      
+    FLIGHT_NO PRIMARY KEY,  
+    SCH_ARRIVAL_TIME NOT NULL,  
+    ACT_ARRIVAL_TIME NOT NULL,  
+    SCH_DPT_TIME NOT NULL,  
+    ACT_DPT_TIME NOT NULL,  
+    DELAY_REASON NOT NULL, 
+    REF_PASSENGER NOT NULL,  
+    REF_MANAGERS NOT NULL, 
+    REF_PLANE NOT NULL 
+     
+) NESTED TABLE INFRA_LIST STORE AS INFRASTRUCTURE_LIST ;
+
+DECLARE    
+    -- Declare variables to store REFs to passenger, manager, plane, and infrastructure  
+    PASSENGER_REF      REF PERSON;    
+    MANAGERS_REF       REF PERSON;    
+    PLANE_REF          REF PLANE;    
+    INFRASTRUCTURE_REF REF INFRASTRUCTURE;  
+BEGIN    
+    -- Fetch REF for passenger with ID 1  
+    SELECT REF(P) INTO PASSENGER_REF   
+    FROM PEOPLE P   
+    WHERE P.ID = 1;    
+      
+    -- Fetch REF for manager with ID 2  
+    SELECT REF(P) INTO MANAGERS_REF   
+    FROM PEOPLE P   
+    WHERE P.ID = 2;    
+      
+    -- Fetch REF for plane with ID 1  
+    SELECT REF(L) INTO PLANE_REF   
+    FROM PLANES L   
+    WHERE L.ID = 1;    
+      
+    -- Fetch REF for infrastructure with UNIT_ID = 1  
+    SELECT REF(I) INTO INFRASTRUCTURE_REF   
+    FROM INFRASTRUCTURES I   
+    WHERE I.UNIT_ID = 1;    
+      
+    -- Insert the first flight  
+    INSERT INTO FLIGHTS VALUES (    
+        FLIGHT(  
+            2775,   
+            TO_DATE('2024-12-03 23:00:00', 'YYYY-MM-DD HH24:MI:SS'),   
+            TO_DATE('2024-12-03 23:10:00', 'YYYY-MM-DD HH24:MI:SS'),    
+            TO_DATE('2024-12-03 23:30:00', 'YYYY-MM-DD HH24:MI:SS'),   
+            TO_DATE('2024-12-03 23:30:00', 'YYYY-MM-DD HH24:MI:SS'),   
+            'LATE ARRIVE', 
+            PASSENGER_REF,   
+            MANAGERS_REF, 
+        	PLANE_REF, 
+            INFRASTRUCTURE_TABLES(  
+                INFRASTRUCTURE_TABLE(  
+                    1,   
+                    TO_DATE('2024-12-03 23:10:00', 'YYYY-MM-DD HH24:MI:SS'), INFRASTRUCTURE_REF)  
+            )    
+        )    
+    );    
+      
+    -- Fetch REF for a different plane with ID 2  
+    SELECT REF(L) INTO PLANE_REF   
+    FROM PLANES L   
+    WHERE L.ID = 2;    
+      
+    -- Fetch REF for another infrastructure with UNIT_ID = 2  
+    SELECT REF(I) INTO INFRASTRUCTURE_REF   
+    FROM INFRASTRUCTURES I   
+    WHERE I.UNIT_ID = 1;    
+      
+    -- Insert the second flight  
+    INSERT INTO FLIGHTS VALUES (    
+        FLIGHT(  
+            3776,   
+            TO_DATE('2024-12-04 14:00:00', 'YYYY-MM-DD HH24:MI:SS'),   
+            TO_DATE('2024-12-04 14:30:00', 'YYYY-MM-DD HH24:MI:SS'),    
+            TO_DATE('2024-12-04 14:30:00', 'YYYY-MM-DD HH24:MI:SS'),   
+            TO_DATE('2024-12-04 15:10:00', 'YYYY-MM-DD HH24:MI:SS'),   
+            'BAD WEATHER',   
+        	PASSENGER_REF,   
+            MANAGERS_REF,   
+            PLANE_REF,  
+            INFRASTRUCTURE_TABLES(  
+                INFRASTRUCTURE_TABLE(  
+                    2,   
+                    TO_DATE('2024-12-04 14:30:00', 'YYYY-MM-DD HH24:MI:SS'), INFRASTRUCTURE_REF)  
+            )   
+            
+        )    
+    );    
+END;
+/
+
+SELECT  
+    -- This query retrieves detailed information from the FLIGHTS table.  
+    -- It displays the FLIGHT_NO, scheduled and actual arrival and departure dates and delay reason
+    -- by following REFs to fetch the associated passenger, manager, plane and   
+    --infrastructure names  
+  
+  
+    FLIGHT.FLIGHT_NO AS FLIGHT_NUMBER,           -- FLIGHT number  
+    FLIGHT.SCH_ARRIVAL_TIME AS SCHEDULED_ARRIVEL_TIME,             -- Scheduled arrival time 
+    FLIGHT.ACT_ARRIVAL_TIME AS ACTUAL_ARRIVEL_TIME,        -- Actual arrival time
+ 	FLIGHT.SCH_DPT_TIME AS SCHEDULED_DEPARTURE_TIME, --Scheduled departure time
+    FLIGHT.ACT_DPT_TIME AS ACTUAL_DEPARTURE_TIME,  --Actual arrival time
+	FLIGHT.DELAY_REASON AS DELAY_REASON,  --Delay reason
+    -- Fetch the passenger name by dereferencing the REF_PASSENGER  
+    DEREF(FLIGHT.REF_PASSENGER).NAME AS PASSENGER_NAME,   -- Passenger first name  
+    DEREF(FLIGHT.REF_PASSENGER).SURNAME AS PASSENGER_SURNAME, -- Passengers surname  
+      
+    -- Fetch the managers name by dereferencing the REF_MANAGERS  
+    DEREF(FLIGHT.REF_MANAGERS).NAME AS MANAGERS_NAME,     -- Managers first name  
+    DEREF(FLIGHT.REF_MANAGERS).SURNAME AS MANAGERS_NAME, -- Managers surname  
+      
+    -- Fetch the plane name by dereferencing the REF_PLANE  
+    DEREF(FLIGHT.REF_PLANE).NAME AS PLANE_NAME, -- Plane name  
+	DEREF(I.REF_INFRASTRUCTURE).UNIT_NAME AS INFRASTRUCTURE_NAME 
+     
+FROM   
+    FLIGHTS FLIGHT, 
+    TABLE(FLIGHT.INFRA_LIST) I 
+ORDER BY   
+    FLIGHT.FLIGHT_NO, I.ID  -- Order results by flight number for easier reading ;
+
+CREATE OR REPLACE TYPE BODY FLIGHT AS 
+ 
+    -- MEMBER PROCEDURE SHOW 
+    MEMBER PROCEDURE SHOW IS 
+    V_PASSENGER_NAME VARCHAR2(100);  
+    V_MANAGERS_NAME VARCHAR2(100);  
+    V_PLANE_NAME VARCHAR2(100);  
+    BEGIN 
+        SELECT P.NAME || ' ' || P.SURNAME INTO V_PASSENGER_NAME  
+        FROM PEOPLE P WHERE REF(P) = SELF.REF_PASSENGER;  
+  
+        SELECT P.NAME || ' ' || P.SURNAME INTO V_MANAGERS_NAME  
+        FROM PEOPLE P WHERE REF(P) = SELF.REF_MANAGERS;  
+  
+        SELECT PL.NAME INTO V_PLANE_NAME  
+        FROM PLANES PL WHERE REF(PL) = SELF.REF_PLANE;  
+ 
+        DBMS_OUTPUT.PUT_LINE('Flight Number: ' || FLIGHT_NO); 
+        DBMS_OUTPUT.PUT_LINE('Scheduled Arrival Time: ' || SCH_ARRIVAL_TIME); 
+        DBMS_OUTPUT.PUT_LINE('Actual Arrival Time: ' || ACT_ARRIVAL_TIME); 
+        DBMS_OUTPUT.PUT_LINE('Scheduled Departure Time: ' || SCH_DPT_TIME); 
+        DBMS_OUTPUT.PUT_LINE('Actual Departure Time: ' || ACT_DPT_TIME); 
+		DBMS_OUTPUT.PUT_LINE('Passenger: ' || NVL(V_PASSENGER_NAME, 'Unknown'));  
+        DBMS_OUTPUT.PUT_LINE('Manager: ' || NVL(V_MANAGERS_NAME, 'Unknown'));  
+        DBMS_OUTPUT.PUT_LINE('Plane: ' || NVL(V_PLANE_NAME, 'Unknown'));  
+        DBMS_OUTPUT.PUT_LINE('Delay Reason: ' || DELAY_REASON); 
+		DBMS_OUTPUT.PUT_LINE('--------------------------');  
+    END SHOW; 
+ 
+    -- STATIC PROCEDURE ADD_FLIGHT 
+    STATIC PROCEDURE ADD_FLIGHT( 
+        p_flight_no   IN NUMBER, 
+        p_sch_arr     IN DATE, 
+        p_act_arr     IN DATE, 
+        p_sch_dep     IN DATE, 
+        p_act_dep     IN DATE, 
+        p_delay       IN VARCHAR2 
+    ) IS 
+    BEGIN 
+        -- Insert the flight into the FLIGHTS table 
+        INSERT INTO FLIGHTS ( 
+            FLIGHT_NO, 
+            SCH_ARRIVAL_TIME, 
+            ACT_ARRIVAL_TIME, 
+            SCH_DPT_TIME, 
+            ACT_DPT_TIME, 
+            DELAY_REASON 
+        ) VALUES ( 
+            p_flight_no, 
+            p_sch_arr, 
+            p_act_arr, 
+            p_sch_dep, 
+            p_act_dep, 
+            p_delay 
+        ); 
+ 
+        DBMS_OUTPUT.PUT_LINE('Flight ' || p_flight_no || ' added successfully.'); 
+    END ADD_FLIGHT; 
+ 
+    -- ORDER MEMBER FUNCTION compare 
+    ORDER MEMBER FUNCTION compare(other FLIGHT) RETURN INTEGER IS 
+    BEGIN 
+        RETURN FLIGHT_NO - other.FLIGHT_NO; 
+    END compare; 
+ 
+END; 
+/
+
+DECLARE  
+    -- This anonymous PL/SQL block is intended to test the SHOW procedure  
+    -- of the FLIGHT object. It retrieves a specific prescription  
+    -- from the FLIGHTS table and displays its details.  
+  
+    V_FLIGHT FLIGHT;  -- Variable to hold a flight object  
+BEGIN  
+    -- Retrieve a specific flight from the FLIGHTS table  
+    SELECT VALUE(F) INTO V_FLIGHT  
+    FROM FLIGHTS F  
+    WHERE F.FLIGHT_NO = 2775;  -- Replace with the actual flight number to test  
+  
+    -- Call the SHOW procedure to display the flight details  
+    V_FLIGHT.SHOW;  
+END; 
+/
+
+SELECT   
+    -- Verify the insertion by selecting the latest flight with detailed information  
+  
+    FLIGHT_NO AS FLIGHT_NUMBER,  
+    TO_CHAR(SCH_ARRIVAL_TIME, 'YYYY-MM-DD hh24:mi:ss') AS SCHEDULED_ARRIVAL_TIME,  
+    TO_CHAR(ACT_ARRIVAL_TIME, 'YYYY-MM-DD hh24:mi:ss') AS ACTUAL_ARRIVAL_TIME, 
+    TO_CHAR(SCH_DPT_TIME, 'YYYY-MM-DD hh24:mi:ss') AS SCHEDULED_DEPARTURE_TIME, 
+    TO_CHAR(ACT_DPT_TIME, 'YYYY-MM-DD hh24:mi:ss') AS ACTUAL_DEPARTURE_TIME, 
+    DELAY_REASON AS DELAY_REASON,  
+    DEREF(REF_PASSENGER).ID AS Passenger_ID,       -- Passenger ID from PEOPLE  
+    DEREF(REF_PASSENGER).NAME || ' ' || DEREF(REF_PASSENGER).SURNAME AS Passenger_Name,  
+    DEREF(REF_MANAGERS).ID AS Managers_ID,         -- Managers ID from PEOPLE  
+    DEREF(REF_MANAGERS).NAME || ' ' || DEREF(REF_MANAGERS).SURNAME AS Managers_Name,  
+    DEREF(REF_PLANE).ID AS Plane_ID, -- Plane ID from PLANES  
+    DEREF(REF_PLANE).NAME AS Plane_Name  
+FROM FLIGHTS;
+
+SELECT  
+    -- This query retrieves prescription objects from FLIGHTS  
+    -- and orders them using the custom ORDER method in the FLIGHT type.  
+  
+    VALUE(f) AS Flight_Object, f.flight_no, f.sch_arrival_time, f.act_arrival_time, f.sch_dpt_time, f.act_dpt_time, f.delay_reason 
+FROM FLIGHTS f  
+ORDER BY VALUE(f);
+
+CREATE OR REPLACE TYPE BODY PERSON AS  
+    -- Complete body for the PERSON type with all functions  
+  
+    -- Function to handle the common logic for retrieving prescriptions  
+    -- based on the reference type (passenger, managers, or any).  
+      
+    MEMBER FUNCTION FETCH_FLIGHTS(pers_type IN VARCHAR2)  
+    RETURN SYS_REFCURSOR IS  
+        pres_cursor SYS_REFCURSOR;  
+    BEGIN  
+        -- Validate the input to prevent errors  
+        IF pers_type NOT IN ('passenger', 'managers', 'any') THEN  
+            RAISE_APPLICATION_ERROR(-20001, 'Invalid pers_type value');  
+        END IF;  
+  
+        -- Open the cursor based on the type specified  
+        OPEN pres_cursor FOR  
+            SELECT VALUE(pres)  
+            FROM FLIGHTS pres  
+            WHERE (pers_type = 'passenger' OR pers_type = 'any') AND  
+                  pres.REF_PASSENGER = (SELECT REF(p) FROM PEOPLE p WHERE p.ID = SELF.ID)  
+                  OR  
+                  (pers_type = 'managers' OR pers_type = 'any') AND  
+                  pres.REF_MANAGERS = (SELECT REF(p) FROM PEOPLE p WHERE p.ID = SELF.ID);  
+  
+        RETURN pres_cursor;  
+    END FETCH_FLIGHTS;  
+  
+  
+    -- Main get_prescriptions function in PERSON type  
+    MEMBER FUNCTION GET_FLIGHTS RETURN SYS_REFCURSOR IS  
+    BEGIN  
+        RETURN FETCH_FLIGHTS('any');  
+    END GET_FLIGHTS;  
+      
+END; 
+/
+
+DECLARE  
+    -- This anonymous PL/SQL block tests the GET_FLIGHTS function for a specific   
+    -- person by retrieving all related flight. It opens a cursor to fetch each   
+    -- flight object associated with the person, then calls the SHOW method   
+    -- on each flight to display its details.  
+  
+    -- Cursor to store the result set of flight as objects  
+    PRES_CURSOR SYS_REFCURSOR;  
+    V_FLIGHT FLIGHT;  -- Variable to hold a flight object  
+  
+BEGIN  
+    -- Get flight for a specific person by opening a cursor that fetches  
+    -- flight objects associated with that person.  
+    SELECT P.GET_FLIGHTS() INTO PRES_CURSOR FROM PEOPLE P WHERE P.ID = 1;  
+  
+    DBMS_OUTPUT.PUT_LINE('--------------------------');  
+      
+    -- Fetch and display each flight object’s details using SHOW  
+    LOOP  
+        FETCH PRES_CURSOR INTO V_FLIGHT;  
+        EXIT WHEN PRES_CURSOR%NOTFOUND;  
+  
+        -- Call the SHOW procedure for the fetched flight object  
+        V_FLIGHT.SHOW;  
+    END LOOP;  
+  
+    CLOSE PRES_CURSOR;  -- Close the cursor after processing all records  
+END; 
+/
+
+CREATE OR REPLACE TYPE BODY MANAGERS AS   
+   
+    -- Calls  GET_FLIGHTS function in PERSON,   
+    -- specifying "manager" to fetch only manager-related prescriptions.       
+   
+    MEMBER FUNCTION GET_FLIGHTS RETURN SYS_REFCURSOR IS   
+        person_ref REF PERSON;        -- Reference to the containing PERSON   
+        person_obj PERSON;            -- Holds the dereferenced PERSON object   
+        pres_cursor SYS_REFCURSOR;    -- Cursor for prescriptions   
+    BEGIN   
+        -- Find the containing PERSON instance for this MANAGERS   
+        SELECT REF(p) INTO person_ref   
+        FROM PEOPLE p   
+        WHERE p.MANAGERS_DATA = SELF;   
+   
+        -- Dereference the REF to obtain the actual PERSON object   
+        SELECT DEREF(person_ref) INTO person_obj FROM DUAL;   
+   
+        -- Call FETCH_FLIGHTS using the dereferenced PERSON object   
+        pres_cursor := person_obj.FETCH_FLIGHTS('managers');   
+           
+        -- Return the cursor with flight results   
+        RETURN pres_cursor;   
+    END GET_FLIGHTS;   
+       
+       
+    -- Function to retrieve the type of the manager   
+   
+    MEMBER FUNCTION get_type RETURN VARCHAR2 IS   
+    BEGIN   
+        -- Access the type attribute of the current MANAGER object   
+        RETURN SELF.TYPE;    
+    END get_type;   
+   
+END; 
+/
+
+DECLARE  
+    -- This block tests the GET_FLIGHTS function for a manager by fetching  
+    -- all associated flight and displaying details using the SHOW procedure.  
+      
+    pres_cursor SYS_REFCURSOR;      -- Cursor to hold the result set of flights  
+    v_flight FLIGHT;    -- Variable to hold each flight object  
+BEGIN  
+    -- Retrieve flight associated with the manager (for example, with ID = 2)  
+    SELECT p.MANAGERS_DATA.GET_FLIGHTS() INTO pres_cursor   
+    FROM PEOPLE p   
+    WHERE p.ID = 2 AND p.MANAGERS_DATA IS NOT NULL;  
+      
+    -- Loop through each flight and display details using SHOW  
+    LOOP  
+        FETCH pres_cursor INTO v_flight;  
+        EXIT WHEN pres_cursor%NOTFOUND;  
+          
+        -- Call the SHOW procedure on each flight object  
+        v_flight.SHOW;  
+    END LOOP;  
+  
+    -- Close the cursor after processing all flight  
+    CLOSE pres_cursor;  
+END; 
+/
+
+SELECT  
+    -- Query to retrieve the type of all managers  
+      
+    p.id, p.MANAGERS_DATA.register_no, p.MANAGERS_DATA.GET_TYPE() AS Manager_Type  
+FROM PEOPLE p  
+WHERE p.MANAGERS_DATA is not null;
+
+CREATE OR REPLACE TYPE BODY PASSENGER AS  
+  
+    -- Calls the centralized FETCH_FLIGHTS function in PERSON,  
+    -- specifying "passenger" to fetch only patient-related flights.      
+  
+    MEMBER FUNCTION GET_FLIGHTS RETURN SYS_REFCURSOR IS  
+        person_ref REF PERSON;        -- Reference to the containing PERSON  
+        person_obj PERSON;            -- Holds the dereferenced PERSON object  
+        pres_cursor SYS_REFCURSOR;    -- Cursor for flight  
+    BEGIN  
+        -- Find the containing PERSON instance for this PASSENGER  
+        SELECT REF(p) INTO person_ref  
+        FROM PEOPLE p  
+        WHERE p.PASSENGER_DATA = SELF;  
+  
+        -- Dereference the REF to obtain the actual PERSON object  
+        SELECT DEREF(person_ref) INTO person_obj FROM DUAL;  
+  
+        -- Call FETCH_FLIGHTS using the dereferenced PERSON object  
+        pres_cursor := person_obj.FETCH_FLIGHTS('passenger');  
+          
+        -- Return the cursor with flights results  
+        RETURN pres_cursor;  
+    END GET_FLIGHTS;  
+  
+END; 
+/
+
+DECLARE  
+    -- This test block is designed to verify the GET_FLIGHTS function in the  
+    -- PASSENGER object type. It retrieves all flight associated with a specific  
+    -- passenger and uses the SHOW procedure to display each flights`s details.  
+      
+    pres_cursor SYS_REFCURSOR;     -- Cursor to store the result set of flight  
+    v_flight FLIGHT;   -- Variable to hold a flight object  
+    passenger_ref PASSENGER;           -- Reference to a specific passenger object  
+BEGIN  
+    -- Retrieve a specific patient from the PEOPLE table  
+    SELECT p.PASSENGER_DATA INTO passenger_ref   
+    FROM PEOPLE p  
+    WHERE p.ID = 1;  -- Replace with an actual passenger ID as needed for testing  
+  
+    -- Use the GET_FLIGHTS function to retrieve flight for this passenger  
+    pres_cursor := passenger_ref.GET_FLIGHTS;  
+  
+    DBMS_OUTPUT.PUT_LINE('Flight for Passenger ID 1:');  
+    DBMS_OUTPUT.PUT_LINE('--------------------------');  
+  
+    -- Loop through each flight and display its details using SHOW  
+    LOOP  
+        FETCH pres_cursor INTO v_flight;  
+        EXIT WHEN pres_cursor%NOTFOUND;  
+          
+        -- Call the SHOW procedure to display each flight details  
+        v_flight.SHOW;  
+    END LOOP;  
+  
+    -- Close the cursor after processing all records  
+    CLOSE pres_cursor;  
+END; 
+/
+
+CREATE OR REPLACE TYPE BODY PLANE AS  
+ 
+    -- MAP method to get the weight of the plane 
+    -- This function simply returns the weight of the plane. 
+    MAP MEMBER FUNCTION get_weight RETURN NUMBER IS 
+    BEGIN 
+        RETURN WEIGHT;  -- Assuming the PLANE object has a WEIGHT attribute 
+    END get_weight;  
+ 
+    -- Function to provide a general description for a plane 
+    -- Returns a string containing the plane's name and description. 
+    MEMBER FUNCTION get_size RETURN VARCHAR2 IS 
+    BEGIN 
+        RETURN 'Plane: ' || NAME || ' - ' || P_SIZE;  -- Assuming NAME and DESCRIPTION are attributes of PLANE 
+    END get_size; 
+ 
+END; 
+
+/
+
+DECLARE  
+    -- This block is intended to initialize and compare two PLANE objects   
+  
+    -- Initialize PLANE objects 
+    plane1 PLANE := PLANE(  
+        1,   
+        'Boeing',   
+        'Large',   
+        45, 
+    	'Yeto' 
+    );  
+  
+    plane2 PLANE := PLANE(  
+        1,   
+        'Airbus',   
+        'Large',   
+        55, 
+    	'KonsolOyun' 
+    );  
+  
+BEGIN  
+    -- Compare the weight and size of plane in each PLANE object  
+    IF plane1 < plane2 THEN  
+        DBMS_OUTPUT.PUT_LINE('Plane 2 is greater than plane 1');  
+    ELSIF plane1 > plane2 THEN  
+        DBMS_OUTPUT.PUT_LINE('Plane 1 is greater than plane 2');  
+    ELSE  
+        DBMS_OUTPUT.PUT_LINE('Plane 1 and 2 are equal');  
+    END IF;  
+END; 
+/
+
+CREATE OR REPLACE TYPE BODY INFRASTRUCTURE AS   
+  
+    -- MAP method to determine if maintenance is needed  
+    -- This function checks if the infrastructure needs maintenance.   
+    -- For now, it simply checks if the 'STATUS' attribute is 'Needs Maintenance'.  
+    MEMBER FUNCTION needs_maintenance RETURN VARCHAR2 IS  
+    BEGIN  
+        IF STATUS = 'Unavaliable' THEN  
+            RETURN 'Yes';  -- Return 'Yes' if maintenance is needed  
+        ELSE  
+            RETURN 'No';   -- Return 'No' if no maintenance is needed  
+        END IF;  
+    END needs_maintenance;   
+  
+    -- Function to return the name of the infrastructure  
+    MEMBER FUNCTION get_name RETURN VARCHAR2 IS  
+    BEGIN  
+        RETURN UNIT_NAME;  -- Assuming the INFRASTRUCTURE object has a NAME attribute  
+    END get_name;  
+  
+    -- Function to return the status of the infrastructure  
+    MEMBER FUNCTION get_status RETURN VARCHAR2 IS  
+    BEGIN  
+        RETURN STATUS;  -- Assuming the INFRASTRUCTURE object has a STATUS attribute  
+    END get_status;  
+  
+END; 
+/
+
+CREATE OR REPLACE TYPE BODY RUNWAYS AS  
+    -- Specific description for runway  
+  
+    OVERRIDING MEMBER FUNCTION needs_maintenance RETURN VARCHAR2 IS  
+    BEGIN  
+        RETURN 'Runways: ' || STATUS ||   
+               ', : ' || LENGTH || ', Type: ' || DISTANCE_BUILDING;  
+    END needs_maintenance; 
+ 
+	OVERRIDING MEMBER FUNCTION get_name RETURN VARCHAR2 IS  
+    BEGIN  
+        RETURN 'Runways: ' || UNIT_NAME ||  
+               ', Needle Size: ' || LENGTH || ', Type: ' || DISTANCE_BUILDING;  
+    END get_name; 
+END; 
+/
+
+CREATE OR REPLACE TYPE BODY GATES AS  
+    -- Specific description for gates
+    
+    OVERRIDING MEMBER FUNCTION needs_maintenance RETURN VARCHAR2 IS  
+    BEGIN  
+        RETURN 'Gates: ' || STATUS ||   
+               ', : ' || TERMINAL_NO || ',  ' || TERMINAL_TYPE;  
+    END needs_maintenance; 
+ 
+	OVERRIDING MEMBER FUNCTION get_name RETURN VARCHAR2 IS  
+    BEGIN  
+        RETURN 'Gates: ' || UNIT_NAME ||  
+               ',  ' || TERMINAL_NO || ': ' || TERMINAL_TYPE;  
+    END get_name; 
+END; 
+/
+
+CREATE OR REPLACE TYPE BODY MACHINARY AS  
+    -- Specific description for machinary
+    
+    OVERRIDING MEMBER FUNCTION needs_maintenance RETURN VARCHAR2 IS  
+    BEGIN  
+        RETURN 'Machinary: ' || STATUS ||   
+               ', : ' || TYPE;  
+    END needs_maintenance; 
+ 
+	OVERRIDING MEMBER FUNCTION get_name RETURN VARCHAR2 IS  
+    BEGIN  
+        RETURN 'Machinary: ' || UNIT_NAME ||  
+               ',  ' || TYPE;  
+    END get_name; 
+END; 
+/
+
+SELECT  
+    -- Select statement to display each infrastructure name and whether it needs maintenance  
+  
+    i.UNIT_NAME AS Infrastructure_name, i.needs_maintenance() AS NEEDS_MAINTENANCE  
+FROM INFRASTRUCTURES i;
+
